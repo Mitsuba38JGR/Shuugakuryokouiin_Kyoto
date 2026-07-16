@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>GitHub Pages ダウンロード</title>
+</head>
+<body>
+
+    <h1>ファイル一覧</h1>
+    
+    <!-- onclickで関数を呼び出す（引数：1.サーバー上のファイル名, 2.保存時のファイル名） -->
+    <button onclick="downloadFile('氏名.docx', '氏名.docx')">Wordファイル ダウンロード</button>
+    <br><br>
+    <button onclick="downloadFile('氏名.html', '氏名.html')">HTMLファイル ダウンロード</button>
+    <br><br>
+    <button onclick="downloadFile('氏名.md', '氏名.md')">MarkDownファイル ダウンロード</button>
+    <br><br>
+    <button onclick="downloadFile('氏名.pptx', '氏名.pptx')">PowerPointファイル ダウンロード</button>
+    <br><br>
+    <button onclick="downloadFile('氏名.py', '氏名.py')">Pythonファイル ダウンロード</button>
+    <br><br>
+    <button onclick="downloadFile('氏名.rtf', '氏名.rtf')">Rich-Textファイル ダウンロード</button>
+    <br><br>
+    <button onclick="downloadFile('氏名.rtf', '氏名.txt')">Textファイル ダウンロード</button>
+    <br><br>
+    <button onclick="downloadFile('氏名.xlsx', '氏名.xlsx')">Excelファイル ダウンロード</button>
+
+    <script>
+        // async/awaitを使って非同期処理を行う関数
+        async function downloadFile(fileName, saveName) {
+            // Filesフォルダ内のパスを組み立て
+            const filePath = `./Files/${fileName}`; 
+
+            try {
+                // ファイルを取得
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`ファイル「${fileName}」が見つからないか、読み込めません。`);
+                }
+                const blob = await response.blob();
+
+                // ダウンロード処理
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = saveName;
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                // 後片付け
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+            } catch (error) {
+                alert('ダウンロードに失敗しました: ' + error.message);
+                console.error(error);
+            }
+        }
+    </script>
+
+</body>
+</html>
